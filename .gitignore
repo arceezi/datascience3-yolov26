@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment files
+.env
+.venv/
+venv/
+
+# Datasets and archives
+data/
+datasets/
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.rar
+
+# Model artifacts
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# YOLO / experiment outputs
+runs/
+results/
+wandb/
+*.csv
+
+# Images and plots generated during experiments
+confusion_matrix*.png
+results*.png
+
+# OS files
+Thumbs.db
+.DS_Store
