@@ -1,0 +1,4 @@
+interface:
+  display_name: "Methods Writer"
+  short_description: "Draft methods from workflow details"
+  default_prompt: "Use $methods-writer to write the Methods section from this Colab and dataset workflow."

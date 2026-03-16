@@ -1,0 +1,4 @@
+interface:
+  display_name: "Introduction Writer"
+  short_description: "Draft scientific report introductions"
+  default_prompt: "Use $introduction-writer to draft or improve the introduction for this scientific report."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report Title Critic"
+  short_description: "Critique and improve paper titles"
+  default_prompt: "Use $report-title-critic to critique and improve this scientific report title."

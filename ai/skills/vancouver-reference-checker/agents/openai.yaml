@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vancouver Reference Checker"
+  short_description: "Check references against Vancouver style"
+  default_prompt: "Use $vancouver-reference-checker to review these citations for Vancouver style issues."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Discussion Writer"
+  short_description: "Analyze why results behaved this way"
+  default_prompt: "Use $discussion-writer to draft or improve the Discussion section for this experiment."

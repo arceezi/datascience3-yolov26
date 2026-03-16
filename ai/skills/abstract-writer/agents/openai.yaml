@@ -1,0 +1,4 @@
+interface:
+  display_name: "Abstract Writer"
+  short_description: "Draft concise scientific abstracts"
+  default_prompt: "Use $abstract-writer to draft or tighten the abstract for this scientific report."

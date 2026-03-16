@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scientific Reports Compliance"
+  short_description: "Check fit with Scientific Reports format"
+  default_prompt: "Use $scientific-reports-compliance to review this paper for Scientific Reports structure and compliance."

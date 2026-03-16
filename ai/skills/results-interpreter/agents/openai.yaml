@@ -1,0 +1,4 @@
+interface:
+  display_name: "Results Interpreter"
+  short_description: "Interpret experiment results rigorously"
+  default_prompt: "Use $results-interpreter to turn these YOLO experiment outputs into a strong Results section."
