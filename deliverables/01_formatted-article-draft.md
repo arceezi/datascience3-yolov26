@@ -1,16 +1,3 @@
-# Formatted Article Draft
-
-This file is the main polished review artifact for the scientific report.
-
-Use this document to see the current article in full reading order and to judge whether the product already looks submission-ready in structure and presentation.
-
-Important workflow note:
-- write and revise source content in `manuscript/`
-- reflect polished combined content here in `deliverables/`
-- export this draft later to `.docx` or `.pdf` into `deliverables/exports/`
-
----
-
 # Detecting Common Road Users in Philippine Traffic: A Comparative YOLOv26 Study
 
 Adviser: John Paul Q. Tomas
@@ -50,19 +37,17 @@ Class-wise performance showed uneven behavior across the seven categories. Jeepn
 
 ### Figure 1. Confusion Matrix
 
-[Insert the selected confusion matrix figure here]
+Figure placeholder for the selected normalized confusion matrix of the strongest configuration.
 
-Caption note:
-- explain what the confusion matrix suggests about class confusion or error patterns
+Caption. Normalized confusion matrix for the selected YOLOv26 configuration, highlighting class-wise concentration on the diagonal and the remaining error regions for weaker classes.
 
 The confusion matrices provide a visual complement to the metric tables. The selected normalized confusion matrix should highlight the stronger diagonal concentration of the best-performing configuration and the persistent errors associated with weaker categories, especially Tricycle and other visually challenging classes.
 
 ### Figure 2. Training Dynamics
 
-[Insert the selected training loss or mAP curves here]
+Figure placeholder for the selected training loss and metric curves of the strongest configuration.
 
-Caption note:
-- explain convergence behavior and whether training appears stable, slow, or potentially overfit
+Caption. Training-dynamics curves for the selected YOLOv26 configuration, summarizing how learning progressed across epochs.
 
 The training-dynamics curves from the run artifacts should be used to show how the selected configuration evolved across epochs and to support the comparison of learning behavior among the three tested setups.
 
@@ -123,10 +108,3 @@ After training, each model was evaluated using the Ultralytics validation routin
 4. Luo X, Cui Z, Su F. FE-Det: An effective traffic object detection framework for fish-eye cameras. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops; 2024 Jun; Seattle, WA, USA. p. 7091-7099. Available from: https://openaccess.thecvf.com/content/CVPR2024W/AICity/html/Luo_FE-Det_An_Effective_Traffic_Object_Detection_Framework_for_Fish-Eye_Cameras_CVPRW_2024_paper.html
 
 5. Soudeep S, Jahin MA, Mridha MF. Interpretable dynamic graph neural networks for small occluded object detection and tracking [Internet]. arXiv [cs.CV]. 2024 [cited 2026 Mar 17]. Available from: https://arxiv.org/abs/2411.17251
-
----
-
-Formatting review notes:
-- keep section order exactly as shown above
-- use visible headings and clear caption labels
-- preserve a clean journal-style flow
