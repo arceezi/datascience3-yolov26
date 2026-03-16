@@ -16,55 +16,6 @@ Real-time object detection methods are well suited to this domain because they p
 
 This paper does not propose a new detector architecture. Instead, it provides a comparative evaluation of three YOLOv26 training configurations using a balanced dataset of common road users in Philippine traffic scenes. The study aims to identify which tested configuration provides the strongest detection performance and to interpret the observed differences in aggregate and class-specific metrics.
 
-## Results
-
-Three YOLOv26 configurations were evaluated on the same balanced dataset and compared using aggregate validation metrics. Across the tested runs, Model_C produced the strongest overall result, followed by Model_A, while Model_B performed worst on all reported aggregate measures. Table 1 summarizes the comparative performance of the three models.
-
-### Table 1. Comparative Performance of YOLOv26 Model Configurations
-
-| Model | Epochs | Optimizer | Batch Size | Learning Rate | mAP50 | Precision | Recall | F1 Score |
-| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Model_A | 25 | AdamW | 4 | 0.01 | 0.6034 | 0.6682 | 0.5274 | 0.5895 |
-| Model_B | 30 | SGD | 20 | 0.001 | 0.4858 | 0.5007 | 0.5029 | 0.5018 |
-| Model_C | 40 | auto | auto-batch | 0.0001 | 0.6178 | 0.6500 | 0.5911 | 0.6192 |
-
-Caption note:
-- report mAP50, Precision, Recall, and F1 for Model_A, Model_B, and Model_C
-
-Model_C achieved the highest mAP50 (0.6178) and the highest F1 score (0.6192), indicating the best balance between precision and recall among the tested configurations. Model_A produced the highest precision (0.6682), but its lower recall reduced its overall F1 score relative to Model_C. Model_B was the weakest configuration overall, with the lowest mAP50, precision, and F1 score. These aggregate results indicate that the choice of training configuration materially affected detection quality on the present dataset.
-
-Class-wise performance showed uneven behavior across the seven categories. Jeepney was one of the strongest classes across all three models, with F1 scores of 0.7456 for Model_A, 0.6455 for Model_B, and 0.7299 for Model_C. SUV and Truck were also relatively stable for the strongest configuration, with Model_C reaching F1 scores of 0.6607 and 0.6246, respectively. In contrast, Tricycle was consistently the weakest class, with F1 scores of 0.3659, 0.2027, and 0.4168 for Models A, B, and C. Pedestrian and Bicycle showed intermediate behavior, suggesting that some classes remained more difficult than others even when aggregate performance improved.
-
-### Figure 1. Confusion Matrix
-
-Figure placeholder for the selected normalized confusion matrix of the strongest configuration.
-
-Caption. Normalized confusion matrix for the selected YOLOv26 configuration, highlighting class-wise concentration on the diagonal and the remaining error regions for weaker classes.
-
-The confusion matrices provide a visual complement to the metric tables. The selected normalized confusion matrix should highlight the stronger diagonal concentration of the best-performing configuration and the persistent errors associated with weaker categories, especially Tricycle and other visually challenging classes.
-
-### Figure 2. Training Dynamics
-
-Figure placeholder for the selected training loss and metric curves of the strongest configuration.
-
-Caption. Training-dynamics curves for the selected YOLOv26 configuration, summarizing how learning progressed across epochs.
-
-The training-dynamics curves from the run artifacts should be used to show how the selected configuration evolved across epochs and to support the comparison of learning behavior among the three tested setups.
-
-## Discussion
-
-The results show that training configuration choice had a meaningful effect on detection quality, but the present comparison should be interpreted carefully because several hyperparameters were changed at the same time. Model_C differed from the other two runs in optimizer selection, epoch count, learning rate, and batch behavior. As a result, its stronger aggregate performance cannot be attributed to a single factor with certainty. Nevertheless, the outcome still suggests that the Model_C configuration produced a more favorable precision-recall balance on this dataset than the settings used in Models A and B.
-
-One useful contrast is the difference between Model_A and Model_C. Model_A achieved the highest precision, which indicates that it was more conservative and produced fewer false positive detections overall. However, its lower recall limited its F1 score. Model_C, in contrast, maintained competitive precision while substantially improving recall, which led to the highest F1 score among the tested runs. A plausible interpretation is that the smaller learning rate and longer training schedule in Model_C allowed the detector to fit the dataset more gradually and capture additional true positives without a major collapse in precision. This interpretation should remain cautious because the comparison is confounded by simultaneous changes in batch size behavior and optimizer mode.
-
-Model_B provides the clearest negative contrast. Its lower performance across all aggregate metrics suggests that the tested combination of SGD, batch size 20, 30 epochs, and learning rate 0.001 was less suitable for the present dataset than the other two configurations. The result does not imply that SGD is generally inferior; rather, it indicates that this specific configuration underperformed under the current data and training setup.
-
-The class-wise results also reveal important dataset-level and task-level challenges. Tricycle was the weakest class across all three models, with Model_C improving the class only to an F1 score of 0.4168. This persistent weakness suggests that Tricycle instances may be harder to detect because of their smaller visual footprint, structural variability, overlap with other vehicles, or lower representation quality in the dataset. Pedestrian and Bicycle also showed lower scores than the strongest vehicle classes, which is consistent with the broader traffic-detection literature where small, partially occluded, or visually inconsistent objects remain difficult to detect reliably [4,5]. By contrast, Jeepney, SUV, and Truck were comparatively easier for the detector, likely because of stronger shape cues and more stable visual identity in the training images.
-
-Another relevant consideration is the composition of the balanced dataset itself. Although the dataset was augmented to improve class coverage, the notebook outputs show that the training split still retained uneven annotation counts across classes, with an imbalance ratio of 2.93 even after balancing. The training set also combined 705 original images with 305 augmented images, which means some of the apparent balancing benefit may come from synthetic variation rather than from large amounts of new real-world data.
-
-Finally, the study has several practical limitations. The reported best result is based on validation metrics rather than a final held-out test comparison. The three configurations are not controlled one-variable-at-a-time experiments, so fine-grained causal interpretation is limited. In addition, the paper currently evaluates image-based detection results rather than end-to-end video analytics or deployment behavior. For these reasons, Model_C can be treated as the strongest tested configuration in this experiment, but not yet as a deployment-ready solution.
-
 ## Methods
 
 ### Experimental Environment
@@ -96,6 +47,54 @@ Each model was trained through the Ultralytics training procedure with outputs s
 ### Evaluation Procedure
 
 After training, each model was evaluated using the Ultralytics validation routine on the validation split. Aggregate metrics recorded in the notebook were mAP50, precision, recall, and F1 score. In addition to aggregate metrics, the workflow also extracted per-class precision, recall, AP50, and F1 score values. These outputs were then assembled into comparison tables and visual summaries for manuscript reporting. Although the dataset contained a separate test split, the reported results in version 1 are based on validation outputs.
+
+## Results
+
+Three YOLOv26 configurations were evaluated on the same balanced dataset and compared using aggregate validation metrics. Across the tested runs, Model_C produced the strongest overall result, followed by Model_A, while Model_B performed worst on all reported aggregate measures. Table 1 summarizes the comparative performance of the three models.
+
+### Table 1. Comparative Performance of YOLOv26 Model Configurations
+
+| Model | Epochs | Optimizer | Batch Size | Learning Rate | mAP50 | Precision | Recall | F1 Score |
+| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Model_A | 25 | AdamW | 4 | 0.01 | 0.6034 | 0.6682 | 0.5274 | 0.5895 |
+| Model_B | 30 | SGD | 20 | 0.001 | 0.4858 | 0.5007 | 0.5029 | 0.5018 |
+| Model_C | 40 | auto | auto-batch | 0.0001 | 0.6178 | 0.6500 | 0.5911 | 0.6192 |
+
+Table 1 reports mAP50, precision, recall, and F1 score for the three tested YOLOv26 configurations.
+
+Model_C achieved the highest mAP50 (0.6178) and the highest F1 score (0.6192), indicating the best balance between precision and recall among the tested configurations. Model_A produced the highest precision (0.6682), but its lower recall reduced its overall F1 score relative to Model_C. Model_B was the weakest configuration overall, with the lowest mAP50, precision, and F1 score. These aggregate results indicate that the choice of training configuration materially affected detection quality on the present dataset.
+
+Class-wise performance showed uneven behavior across the seven categories. Jeepney was one of the strongest classes across all three models, with F1 scores of 0.7456 for Model_A, 0.6455 for Model_B, and 0.7299 for Model_C. SUV and Truck were also relatively stable for the strongest configuration, with Model_C reaching F1 scores of 0.6607 and 0.6246, respectively. In contrast, Tricycle was consistently the weakest class, with F1 scores of 0.3659, 0.2027, and 0.4168 for Models A, B, and C. Pedestrian and Bicycle showed intermediate behavior, suggesting that some classes remained more difficult than others even when aggregate performance improved.
+
+### Figure 1. Confusion Matrix
+
+![Normalized confusion matrix for Model_C](deliverables/figures/model-c-confusion-matrix-normalized.png)
+
+Caption. Normalized confusion matrix for the selected YOLOv26 configuration, highlighting class-wise concentration on the diagonal and the remaining error regions for weaker classes.
+
+The confusion matrices provide a visual complement to the metric tables. The selected normalized confusion matrix should highlight the stronger diagonal concentration of the best-performing configuration and the persistent errors associated with weaker categories, especially Tricycle and other visually challenging classes.
+
+### Figure 2. Training Dynamics
+
+![Training dynamics for Model_C](deliverables/figures/model-c-training-dynamics.png)
+
+Caption. Training-dynamics curves for the selected YOLOv26 configuration, summarizing how learning progressed across epochs.
+
+The training-dynamics curves from the run artifacts should be used to show how the selected configuration evolved across epochs and to support the comparison of learning behavior among the three tested setups.
+
+## Discussion
+
+The results show that training configuration choice had a meaningful effect on detection quality, but the present comparison should be interpreted carefully because several hyperparameters were changed at the same time. Model_C differed from the other two runs in optimizer selection, epoch count, learning rate, and batch behavior. As a result, its stronger aggregate performance cannot be attributed to a single factor with certainty. Nevertheless, the outcome still suggests that the Model_C configuration produced a more favorable precision-recall balance on this dataset than the settings used in Models A and B.
+
+One useful contrast is the difference between Model_A and Model_C. Model_A achieved the highest precision, which indicates that it was more conservative and produced fewer false positive detections overall. However, its lower recall limited its F1 score. Model_C, in contrast, maintained competitive precision while substantially improving recall, which led to the highest F1 score among the tested runs. A plausible interpretation is that the smaller learning rate and longer training schedule in Model_C allowed the detector to fit the dataset more gradually and capture additional true positives without a major collapse in precision. This interpretation should remain cautious because the comparison is confounded by simultaneous changes in batch size behavior and optimizer mode.
+
+Model_B provides the clearest negative contrast. Its lower performance across all aggregate metrics suggests that the tested combination of SGD, batch size 20, 30 epochs, and learning rate 0.001 was less suitable for the present dataset than the other two configurations. The result does not imply that SGD is generally inferior; rather, it indicates that this specific configuration underperformed under the current data and training setup.
+
+The class-wise results also reveal important dataset-level and task-level challenges. Tricycle was the weakest class across all three models, with Model_C improving the class only to an F1 score of 0.4168. This persistent weakness suggests that Tricycle instances may be harder to detect because of their smaller visual footprint, structural variability, overlap with other vehicles, or lower representation quality in the dataset. Pedestrian and Bicycle also showed lower scores than the strongest vehicle classes, which is consistent with the broader traffic-detection literature where small, partially occluded, or visually inconsistent objects remain difficult to detect reliably [4,5]. By contrast, Jeepney, SUV, and Truck were comparatively easier for the detector, likely because of stronger shape cues and more stable visual identity in the training images.
+
+Another relevant consideration is the composition of the balanced dataset itself. Although the dataset was augmented to improve class coverage, the notebook outputs show that the training split still retained uneven annotation counts across classes, with an imbalance ratio of 2.93 even after balancing. The training set also combined 705 original images with 305 augmented images, which means some of the apparent balancing benefit may come from synthetic variation rather than from large amounts of new real-world data.
+
+Finally, the study has several practical limitations. The reported best result is based on validation metrics rather than a final held-out test comparison. The three configurations are not controlled one-variable-at-a-time experiments, so fine-grained causal interpretation is limited. In addition, the paper currently evaluates image-based detection results rather than end-to-end video analytics or deployment behavior. For these reasons, Model_C can be treated as the strongest tested configuration in this experiment, but not yet as a deployment-ready solution.
 
 ## References
 
