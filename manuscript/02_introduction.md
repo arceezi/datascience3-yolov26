@@ -1,10 +1,9 @@
 # 02 Introduction
 
-Build the Introduction around:
-- why road-user detection matters in traffic analysis, safety, or intelligent transport contexts
-- why Philippine traffic scenes are a meaningful application context
-- why real-time object detection matters
-- why YOLOv26 is being used in this experiment
-- the paper objective and contribution
+Road-user detection is a foundational task in computer vision because it supports higher-level functions such as scene understanding, surveillance, tracking, and intelligent transportation analysis [1,2]. In traffic settings, reliable detection of vehicles and vulnerable road users is important because the visual scene is often crowded, dynamically changing, and affected by occlusion, scale variation, illumination shifts, and camera-related distortion [3-5]. These challenges become especially relevant in heterogeneous urban environments where multiple road-user types occupy the same scene and differ substantially in size, appearance, and motion.
 
-End the section by stating what the study compares and what the paper aims to show.
+The Philippine traffic context provides a practical and meaningful application setting for this problem. Urban road scenes can contain diverse and visually mixed categories such as bicycles, cars, jeepneys, pedestrians, sport utility vehicles, tricycles, and trucks within the same field of view. This heterogeneity increases the difficulty of detection and creates a useful benchmark for evaluating how a detector behaves across classes that vary in size, shape, and frequency. From a traffic-monitoring perspective, a model that performs well in this setting may support later work in counting, surveillance, and safety-oriented analytics, even if additional validation is still required before operational deployment.
+
+Real-time object detection methods are well suited to this domain because they perform localization and class prediction within a single pipeline [1]. The YOLO family is one of the most widely used examples of this design philosophy, and related studies have shown that YOLO-based approaches remain relevant for traffic-oriented perception tasks because of their balance between speed and accuracy [1,3]. More recent traffic-focused work also shows that urban and fisheye traffic scenes remain difficult because of small objects, clutter, distortion, and class confusion [4,5]. For the present study, YOLOv26 was selected as the experimental detector and trained under three different configurations to examine how optimizer choice, batch size, learning rate, and epoch count affect performance on a Philippine traffic dataset.
+
+This paper does not propose a new detector architecture. Instead, it provides a comparative evaluation of three YOLOv26 training configurations using a balanced dataset of common road users in Philippine traffic scenes. The study aims to identify which tested configuration provides the strongest detection performance and to interpret the observed differences in aggregate and class-specific metrics.

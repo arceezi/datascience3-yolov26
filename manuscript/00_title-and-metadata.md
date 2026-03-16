@@ -2,7 +2,7 @@
 
 ## Working Title
 
-Detection and Classification of Common Road Users in Philippine Traffic Using YOLOv26
+Detecting Common Road Users in Philippine Traffic: A Comparative YOLOv26 Study
 
 ## Title Revision Notes
 
@@ -34,7 +34,7 @@ Detecting Common Road Users in Philippine Traffic Images: A Comparative YOLOv26 
 
 ### Adoption Status
 
-- current working title remains unchanged until the recommended title is explicitly accepted
+- recommended title accepted as the working title for version 1 of the paper
 
 ## Adviser
 
@@ -48,7 +48,6 @@ If required later, include one of the following names after confirming the final
 
 ## Metadata To Finalize Later
 
-- accepted final title
 - final article title
 - author order
 - affiliations

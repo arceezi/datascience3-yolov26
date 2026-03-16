@@ -1,9 +1,3 @@
 # 07 Peer Review Statement
 
-Write one short paragraph reflecting on which trained model you would deploy in a real-world high-stakes environment and why.
-
-Suggested points:
-- which model you would choose
-- whether accuracy, recall, or overall reliability drove the choice
-- what risks remain before real deployment
-- what additional validation would still be required
+Among the three trained configurations, Model_C is the model I would choose as the strongest candidate for a high-stakes real-world setting because it achieved the best aggregate validation performance, including the highest mAP50, recall, and F1 score. In a safety-relevant context, I would prioritize balanced detection performance over precision alone, since missing road users can be more harmful than producing some extra detections. However, I would still not deploy Model_C directly without additional safeguards. The current comparison is based on validation results rather than a final held-out test evaluation, and the three models differ in multiple hyperparameters at once, which limits causal interpretation. Before real deployment, I would require a dedicated test-set evaluation, video-based validation in realistic traffic conditions, and a deeper error analysis for weak classes such as Tricycle.
