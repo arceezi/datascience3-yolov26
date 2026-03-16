@@ -5,21 +5,23 @@ This repository is organized around writing a Scientific Reports-style paper fro
 The experiment workflow remains Colab-first:
 - training and evaluation stay in the notebook
 - datasets and run outputs stay in Google Drive
-- GitHub stores the manuscript, report-planning notes, references, and AI writing helpers
+- GitHub stores the manuscript, polished deliverables, report-planning notes, references, and AI writing helpers
 
 ## Main Workflow
 
 1. Use the notebook in `notebooks/` as the source of experiment outputs.
 2. Use `references/` for Drive links and shared asset context.
 3. Draft the paper section by section in `manuscript/`.
-4. Use `docs/` to organize evidence, figures, interpretation, revisions, and submission checks.
-5. Use `ai/skills/` and `ai/sub-agents/` to improve titles, sections, references, and journal compliance.
+4. Assemble polished review drafts in `deliverables/`.
+5. Use `docs/` to organize evidence, figures, interpretation, revisions, and submission checks.
+6. Use `ai/skills/` and `ai/sub-agents/` to improve titles, sections, references, and journal compliance.
 
 ## Repository Layout
 
 - `notebooks/` experiment notebook and preserved original copy
 - `references/` shared Drive and asset inventory notes
 - `manuscript/` the actual scientific report draft and submission-support files
+- `deliverables/` polished review drafts and future exported `.docx` and `.pdf` outputs
 - `docs/` report support notes, evidence maps, revision history, and checklists
 - `ai/skills/` section-writing and report-improvement skills
 - `ai/sub-agents/` section reviewers and journal-style critics
@@ -41,4 +43,7 @@ Those assets remain in Google Drive so the repository stays lightweight while st
 
 - Do not modify `notebooks/` or `references/` unless the experiment assets themselves change.
 - Treat `manuscript/00_title-and-metadata.md` as the source of truth for title and report metadata.
+- Treat `deliverables/01_formatted-article-draft.md` as the main review artifact for checking the current best-looking paper draft.
+- Start section edits in `manuscript/`, then reflect polished combined versions in `deliverables/`.
+- Store future `.docx` and `.pdf` exports only in `deliverables/exports/`.
 - Track section-level edits and critiques in `docs/06_revision_log.md`.
