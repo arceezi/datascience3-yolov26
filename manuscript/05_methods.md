@@ -6,7 +6,9 @@ All training and evaluation procedures were executed in Google Colab using a Pyt
 
 ### Conceptual Framework
 
-The conceptual workflow of the study was straightforward. Traffic-scene images were provided as inputs to a YOLOv26 detector, which was trained to localize and label seven road-user classes through bounding-box prediction and class assignment. The trained models were then evaluated on the validation split using standard object-detection metrics, and the resulting aggregate and class-specific outputs were compared across three training configurations.
+The conceptual framework of the study is shown in Figure 1. Traffic-scene images from the balanced dataset served as the study input. These images were processed through three YOLOv26 training configurations, each of which produced validation metrics, class-wise summaries, and diagnostic figures. The comparative interpretation stage used these outputs to determine which tested configuration provided the strongest overall performance and where class-specific weaknesses remained.
+
+Figure 1. Conceptual framework of the study, showing how Philippine traffic images were transformed into comparative model evidence and manuscript-level interpretation.
 
 ### Dataset
 
@@ -25,6 +27,12 @@ All three runs used the `yolo26n.pt` weights as the starting model. The input im
 - Model_C: 40 epochs, automatic optimizer selection, automatic batch sizing, learning rate 0.0001
 
 Each model was trained through the Ultralytics `train` procedure with outputs stored under the shared `detect` project directory. The notebook retained the default training plots and confusion matrices produced by the framework for later interpretation.
+
+### Study Workflow
+
+Figure 2 summarizes the operational workflow followed in the experiment. The process began with dataset preparation and configuration in Google Drive, followed by Colab-based environment setup and Ultralytics training. The three model runs were then validated on the validation split, after which aggregate metrics, class-wise summaries, confusion matrices, and training-dynamics plots were prepared for comparative reporting.
+
+Figure 2. Study workflow used for the comparative YOLOv26 experiment, from dataset preparation through manuscript-ready evidence generation.
 
 ### Evaluation Procedure
 

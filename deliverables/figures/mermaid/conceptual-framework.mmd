@@ -1,0 +1,9 @@
+flowchart LR
+    A["Philippine traffic-scene images<br/>Balanced dataset"] --> B["Three YOLOv26<br/>training configurations"]
+    B --> C["Validation metrics<br/>mAP50, precision, recall, F1"]
+    B --> D["Class-wise findings<br/>per-class precision, recall, AP50, F1"]
+    B --> E["Diagnostic figures<br/>confusion matrix and training curves"]
+    C --> F["Comparative interpretation"]
+    D --> F
+    E --> F
+    F --> G["Strongest tested configuration<br/>and remaining class-level weaknesses"]

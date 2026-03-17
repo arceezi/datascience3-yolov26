@@ -1,0 +1,12 @@
+flowchart TD
+    A["Dataset preparation<br/>Balanced split in Google Drive"] --> B["Colab environment setup<br/>Ultralytics + T4 GPU"]
+    B --> C["Train Model_A"]
+    B --> D["Train Model_B"]
+    B --> E["Train Model_C"]
+    C --> F["Validation outputs"]
+    D --> F
+    E --> F
+    F --> G["Aggregate metrics and<br/>class-wise summaries"]
+    F --> H["Confusion matrix and<br/>training-dynamics plots"]
+    G --> I["Manuscript tables and figures"]
+    H --> I

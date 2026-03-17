@@ -1,0 +1,7 @@
+flowchart LR
+    A["Aggregate metrics<br/>Model_A vs Model_B vs Model_C"] --> E["Comparative evidence synthesis"]
+    B["Class-wise findings<br/>strong and weak classes"] --> E
+    C["Model_C confusion matrix"] --> E
+    D["Model_C training-dynamics curves"] --> E
+    E --> F["Model_C identified as the<br/>strongest tested configuration"]
+    E --> G["Interpretive limits noted:<br/>validation-only and confounded hyperparameters"]

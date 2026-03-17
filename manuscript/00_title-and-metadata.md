@@ -18,12 +18,12 @@ Detecting Common Road Users in Philippine Traffic: A Comparative YOLOv26 Study
 1. Detection of Common Road Users in Philippine Traffic Images Using YOLOv26
 2. Object Detection of Common Road Users in Philippine Traffic Using YOLOv26
 3. Comparative Evaluation of YOLOv26 Training Configurations for Detecting Common Road Users in Philippine Traffic
-4. Detecting Common Road Users in Philippine Traffic Images: A Comparative YOLOv26 Study
-5. YOLOv26-Based Detection of Common Road Users in Philippine Traffic Images
+4. Detecting Common Road Users in Philippine Traffic: A Comparative YOLOv26 Study
+5. YOLOv26-Based Detection of Common Road Users in Philippine Traffic
 
 ### Recommended Title
 
-Detecting Common Road Users in Philippine Traffic Images: A Comparative YOLOv26 Study
+Detecting Common Road Users in Philippine Traffic: A Comparative YOLOv26 Study
 
 ### Recommendation Rationale
 
@@ -34,7 +34,7 @@ Detecting Common Road Users in Philippine Traffic Images: A Comparative YOLOv26 
 
 ### Adoption Status
 
-- recommended title accepted as the working title for version 1 of the paper
+- recommended title accepted as the working title for version 2 of the paper
 
 ## Adviser
 
