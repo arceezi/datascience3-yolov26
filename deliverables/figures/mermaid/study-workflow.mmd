@@ -1,50 +1,12 @@
 flowchart TD
-    classDef stage fill:#f6f1e8,stroke:#9a7b4f,stroke-width:2px,color:#2f2417;
-    classDef prep fill:#d9ecff,stroke:#4b79a8,stroke-width:2px,color:#1b3146;
-    classDef train fill:#fbe0d2,stroke:#b66a3c,stroke-width:2px,color:#4a2410;
-    classDef eval fill:#e4f4df,stroke:#5e8f4b,stroke-width:2px,color:#21341a;
-    classDef report fill:#f7e2f0,stroke:#9b4f86,stroke-width:2px,color:#45203b;
-    classDef shadow fill:#efe7db,stroke:#c7b49d,stroke-width:1px,color:#7d6b55;
-
-    T1["Preparation"]:::stage --> T2["Training"]:::stage --> T3["Validation"]:::stage --> T4["Reporting"]:::stage
-
-    subgraph A["Preparation Panel"]
-        direction LR
-        A0[" "]:::shadow
-        A1["🗂 Dataset preparation<br/>Balanced split in Google Drive"]:::prep
-        A2["💻 Colab environment setup<br/>Ultralytics + T4 GPU"]:::prep
-        A0 --- A1
-    end
-
-    subgraph B["Training Panel"]
-        direction LR
-        B1["🧠 Train Model_A"]:::train
-        B2["🧠 Train Model_B"]:::train
-        B3["🧠 Train Model_C"]:::train
-    end
-
-    subgraph C["Validation Panel"]
-        direction LR
-        C1["📊 Aggregate metrics and<br/>class-wise summaries"]:::eval
-        C2["🖼 Confusion matrix and<br/>training-dynamics plots"]:::eval
-    end
-
-    subgraph D["Reporting Panel"]
-        direction LR
-        D1["📝 Manuscript tables<br/>and evidence write-up"]:::report
-        D2["📄 Formatted article<br/>and DOCX deliverable"]:::report
-    end
-
-    A1 --> A2
-    A2 --> B1
-    A2 --> B2
-    A2 --> B3
-    B1 --> C1
-    B2 --> C1
-    B3 --> C1
-    B1 --> C2
-    B2 --> C2
-    B3 --> C2
-    C1 --> D1
-    C2 --> D1
-    D1 --> D2
+    A["Dataset preparation<br/>Balanced split in Google Drive"] --> B["Colab environment setup<br/>Ultralytics + T4 GPU"]
+    B --> C["Train Model_A"]
+    B --> D["Train Model_B"]
+    B --> E["Train Model_C"]
+    C --> F["Validation outputs"]
+    D --> F
+    E --> F
+    F --> G["Aggregate metrics and<br/>class-wise summaries"]
+    F --> H["Confusion matrix and<br/>training-dynamics plots"]
+    G --> I["Manuscript tables and figures"]
+    H --> I
