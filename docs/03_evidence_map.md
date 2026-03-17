@@ -56,5 +56,8 @@ Section-level claim anchors for version 1:
   - dataset size and split counts: experiment-supported
   - training configurations for Model_A, Model_B, and Model_C: experiment-supported
   - current reported outcomes are validation-based: experiment-supported
+  - dataset provenance includes Roboflow export metadata and YOLO26-format annotation workflow: supported by `README.roboflow.txt` inside the local dataset ZIP and `Balanced/data.yaml`
+  - the dataset originated from video-derived frames rather than native still-image capture: supported by the frame-style filenames and user-provided workflow context
+  - sample dataset figure in version 4 is generated from real `Balanced` images and labels in the local dataset ZIP: asset-supported
 
 Do not make interpretive claims in the manuscript unless they can be tied back to a specific experiment artifact here.
