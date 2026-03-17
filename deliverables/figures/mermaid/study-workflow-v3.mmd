@@ -1,0 +1,24 @@
+flowchart TD
+    classDef input fill:#dbe8f7,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+    classDef process fill:#f9f1d9,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+    classDef evidence fill:#f8e4e4,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+    classDef outcome fill:#e8e3f6,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+    classDef support fill:#e4efe5,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+
+    A["Dataset preparation<br/>Balanced split in<br/>Google Drive"]:::input
+    B["Colab environment<br/>Ultralytics + T4 GPU"]:::support
+    C["Train Model_A<br/>Model_B<br/>Model_C"]:::process
+    D["Validation outputs<br/>for all runs"]:::process
+    E["Metrics table and<br/>class-wise summary"]:::evidence
+    F["Confusion matrix and<br/>training-dynamics plots"]:::evidence
+    G["Formatted paper figures<br/>and comparative report"]:::outcome
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    D --> F
+    E --> G
+    F --> G
+
+    linkStyle 0,1,2,3,4,5,6 stroke:#8e8e8e,stroke-width:1.5px;

@@ -1,0 +1,26 @@
+flowchart TD
+    classDef input fill:#dbe8f7,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+    classDef process fill:#f9f1d9,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+    classDef evidence fill:#f8e4e4,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+    classDef outcome fill:#e8e3f6,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+    classDef support fill:#e4efe5,stroke:#f7f9fc,stroke-width:4px,color:#223a64;
+
+    A["Traffic-scene images<br/>Balanced dataset"]:::input
+    B["Three YOLOv26<br/>training setups"]:::process
+    C["Validation metrics<br/>mAP50, precision,<br/>recall, F1"]:::evidence
+    D["Class-wise findings<br/>per-class scores"]:::evidence
+    E["Diagnostic figures<br/>confusion matrix<br/>and training curves"]:::support
+    F["Comparative interpretation<br/>of model performance"]:::outcome
+    G["Strongest tested<br/>configuration and<br/>remaining weaknesses"]:::outcome
+
+    A --> B
+    B -.-> C
+    B -.-> D
+    B -.-> E
+    C --> F
+    D --> F
+    E --> F
+    F --> G
+
+    linkStyle 1,2,3 stroke:#8e8e8e,stroke-width:1.5px,stroke-dasharray:5 5;
+    linkStyle 0,4,5,6,7 stroke:#8e8e8e,stroke-width:1.5px;
