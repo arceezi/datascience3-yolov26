@@ -1,0 +1,4 @@
+interface:
+  display_name: "Report Formatting"
+  short_description: "Format the paper into a journal-style DOCX and PDF"
+  default_prompt: "Use $report-formatting to format this scientific paper into a Nature-like journal layout."
