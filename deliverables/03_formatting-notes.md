@@ -20,7 +20,8 @@ Use this article order in the current journal-style draft:
 - keep the title, adviser line, and abstract in a full-width lead section
 - begin the double-column body at `Introduction`
 - use a moderate column gutter so the text stays readable
-- widen figure and table sections when needed rather than shrinking them too aggressively
+- widen figure and table neighborhoods when needed rather than shrinking them too aggressively
+- keep a major visual subsection together when it has a heading, a short lead-in paragraph, the visual itself, and a caption
 
 ## Table Style
 
@@ -28,6 +29,7 @@ Use this article order in the current journal-style draft:
 - use concise, descriptive titles
 - keep metric names consistent across the paper
 - keep wide tables readable even if they need a temporary single-column-width section
+- keep the table-introduction sentence, caption, table, and short table note together when possible
 
 ## Figure Style
 
@@ -35,6 +37,7 @@ Use this article order in the current journal-style draft:
 - place a clear caption immediately under each figure
 - captions should explain what the reader should notice, not just restate the filename
 - size figures to fit the column or widened section without making text too small
+- avoid using a heading that duplicates the caption label verbatim if that causes caption-style conflicts in export
 
 ## Reference Style
 

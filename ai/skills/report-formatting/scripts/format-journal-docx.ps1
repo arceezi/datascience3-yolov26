@@ -25,6 +25,7 @@ $wdAlignParagraphCenter = 1
 $wdAlignParagraphJustify = 3
 $wdLineSpaceSingle = 0
 $wdAutoFitWindow = 2
+$wdStory = 6
 
 function Clean-Text([string]$text) {
     return (($text -replace "[`r`a]", "").Trim())
@@ -68,6 +69,18 @@ function Find-PreviousNonEmptyParagraph($doc, [int]$index) {
     return $null
 }
 
+function Find-NextNonEmptyParagraph($doc, [int]$index) {
+    $i = $index + 1
+    while ($i -le $doc.Paragraphs.Count) {
+        $text = Paragraph-Text $doc.Paragraphs.Item($i)
+        if (-not [string]::IsNullOrWhiteSpace($text) -or $doc.Paragraphs.Item($i).Range.InlineShapes.Count -gt 0) {
+            return $i
+        }
+        $i++
+    }
+    return $null
+}
+
 function Insert-Break-BeforeParagraph($doc, [int]$index) {
     $range = $doc.Paragraphs.Item($index).Range.Duplicate
     $range.Collapse($wdCollapseStart)
@@ -94,6 +107,96 @@ function Find-ParagraphContainingPosition($doc, [int]$position) {
     return $null
 }
 
+function Paragraph-StyleName($paragraph) {
+    try {
+        return [string]$paragraph.Range.Style.NameLocal
+    }
+    catch {
+        return ""
+    }
+}
+
+function Is-HeadingParagraph($paragraph) {
+    $styleName = Paragraph-StyleName $paragraph
+    return $styleName -like "Heading *"
+}
+
+function Add-Block($blocks, [int]$start, [int]$end) {
+    if ($start -gt 0 -and $end -ge $start) {
+        [void]$blocks.Add([PSCustomObject]@{ Start = $start; End = $end })
+    }
+}
+
+function Find-ExactParagraphOrNull($doc, [string]$text) {
+    return Find-ParagraphIndex $doc $text
+}
+
+function Find-ParagraphStartingWith($doc, [string]$prefix) {
+    for ($i = 1; $i -le $doc.Paragraphs.Count; $i++) {
+        $text = Paragraph-Text $doc.Paragraphs.Item($i)
+        if ($text.StartsWith($prefix)) {
+            return $i
+        }
+    }
+    return $null
+}
+
+function Find-NextHeadingIndex($doc, [int]$index) {
+    $i = $index + 1
+    while ($i -le $doc.Paragraphs.Count) {
+        if (Is-HeadingParagraph $doc.Paragraphs.Item($i)) {
+            return $i
+        }
+        $i++
+    }
+    return $null
+}
+
+function Find-VisualParagraphBeforeCaption($doc, [int]$captionIndex) {
+    $i = $captionIndex - 1
+    while ($i -ge 1) {
+        $paragraph = $doc.Paragraphs.Item($i)
+        if ($paragraph.Range.InlineShapes.Count -gt 0 -or $paragraph.Range.Tables.Count -gt 0) {
+            return $i
+        }
+        $text = Paragraph-Text $paragraph
+        if (-not [string]::IsNullOrWhiteSpace($text)) {
+            return $null
+        }
+        $i--
+    }
+    return $null
+}
+
+function Find-CaptionAfterIndex($doc, [int]$startIndex, [string]$prefix) {
+    for ($i = $startIndex; $i -le $doc.Paragraphs.Count; $i++) {
+        $text = Paragraph-Text $doc.Paragraphs.Item($i)
+        if ($text.StartsWith($prefix)) {
+            return $i
+        }
+        if (Is-HeadingParagraph $doc.Paragraphs.Item($i) -and $i -gt $startIndex) {
+            break
+        }
+    }
+    return $null
+}
+
+function Find-PostCaptionTail($doc, [int]$captionIndex) {
+    $next = Find-NextNonEmptyParagraph $doc $captionIndex
+    if ($null -eq $next) {
+        return $captionIndex
+    }
+    $paragraph = $doc.Paragraphs.Item($next)
+    $text = Paragraph-Text $paragraph
+    if ($paragraph.Range.InlineShapes.Count -gt 0 -or $paragraph.Range.Tables.Count -gt 0 -or (Is-HeadingParagraph $paragraph)) {
+        return $captionIndex
+    }
+    if ($text.StartsWith("Figure ") -or $text.StartsWith("Table ")) {
+        return $captionIndex
+    }
+    return $next
+}
+
 $word = $null
 $doc = $null
 
@@ -105,6 +208,11 @@ try {
     $inputPath = (Resolve-Path $InputDocx).Path
     $doc = $word.Documents.Open($inputPath)
     $doc.PageSetup.PaperSize = $wdPaperA4
+    $doc.ShowSpellingErrors = $false
+    $doc.ShowGrammaticalErrors = $false
+    $doc.SpellingChecked = $true
+    $doc.GrammarChecked = $true
+    $doc.Content.NoProofing = -1
 
     foreach ($section in @($doc.Sections)) {
         $section.PageSetup.PaperSize = $wdPaperA4
@@ -121,13 +229,27 @@ try {
 
     $blocks = New-Object System.Collections.ArrayList
 
-    for ($i = 1; $i -le $doc.Paragraphs.Count; $i++) {
-        $text = Paragraph-Text $doc.Paragraphs.Item($i)
-        if ($text -like "Figure *") {
-            $startIndex = Find-PreviousContentParagraph $doc $i
-            if ($null -ne $startIndex) {
-                [void]$blocks.Add([PSCustomObject]@{ Start = $startIndex; End = $i })
-            }
+    $conceptHeading = Find-ExactParagraphOrNull $doc "Conceptual Framework"
+    if ($null -ne $conceptHeading) {
+        $captionIndex = Find-CaptionAfterIndex $doc $conceptHeading "Figure 1."
+        if ($null -ne $captionIndex) {
+            Add-Block $blocks $conceptHeading (Find-PostCaptionTail $doc $captionIndex)
+        }
+    }
+
+    $datasetCaption = Find-ParagraphStartingWith $doc "Figure 3."
+    if ($null -ne $datasetCaption) {
+        $imageIndex = Find-VisualParagraphBeforeCaption $doc $datasetCaption
+        if ($null -ne $imageIndex) {
+            Add-Block $blocks $imageIndex $datasetCaption
+        }
+    }
+
+    $workflowHeading = Find-ExactParagraphOrNull $doc "Study Workflow"
+    if ($null -ne $workflowHeading) {
+        $captionIndex = Find-CaptionAfterIndex $doc $workflowHeading "Figure 2."
+        if ($null -ne $captionIndex) {
+            Add-Block $blocks $workflowHeading (Find-PostCaptionTail $doc $captionIndex)
         }
     }
 
@@ -139,7 +261,42 @@ try {
         }
         $captionIndex = Find-PreviousNonEmptyParagraph $doc $tableStart
         if ($null -ne $captionIndex -and (Paragraph-Text $doc.Paragraphs.Item($captionIndex)) -like "Table *") {
-            [void]$blocks.Add([PSCustomObject]@{ Start = $captionIndex; End = $tableEnd })
+            $resultsHeading = Find-ExactParagraphOrNull $doc "Results"
+            $resultsIntro = $null
+            if ($null -ne $resultsHeading) {
+                $resultsIntro = Find-NextNonEmptyParagraph $doc $resultsHeading
+            }
+            $tableNote = Find-NextNonEmptyParagraph $doc $tableEnd
+            if ($null -ne $resultsIntro -and $resultsIntro -lt $captionIndex -and $null -ne $tableNote) {
+                Add-Block $blocks $resultsIntro $tableNote
+            }
+            else {
+                Add-Block $blocks $captionIndex $tableEnd
+            }
+        }
+    }
+
+    $confusionHeading = Find-ExactParagraphOrNull $doc "Confusion Matrix"
+    if ($null -ne $confusionHeading) {
+        $captionIndex = Find-CaptionAfterIndex $doc $confusionHeading "Figure 4."
+        if ($null -ne $captionIndex) {
+            Add-Block $blocks $confusionHeading (Find-PostCaptionTail $doc $captionIndex)
+        }
+    }
+
+    $trainingHeading = Find-ExactParagraphOrNull $doc "Training Dynamics"
+    if ($null -ne $trainingHeading) {
+        $captionIndex = Find-CaptionAfterIndex $doc $trainingHeading "Figure 5."
+        if ($null -ne $captionIndex) {
+            Add-Block $blocks $trainingHeading (Find-PostCaptionTail $doc $captionIndex)
+        }
+    }
+
+    $synthesisHeading = Find-ExactParagraphOrNull $doc "Results-Synthesis Diagram"
+    if ($null -ne $synthesisHeading) {
+        $captionIndex = Find-CaptionAfterIndex $doc $synthesisHeading "Figure 6."
+        if ($null -ne $captionIndex) {
+            Add-Block $blocks $synthesisHeading (Find-PostCaptionTail $doc $captionIndex)
         }
     }
 
@@ -174,6 +331,11 @@ try {
         $paragraph = $doc.Paragraphs.Item($i)
         $text = Paragraph-Text $paragraph
 
+        if (Is-HeadingParagraph $paragraph) {
+            $paragraph.Range.ParagraphFormat.KeepWithNext = -1
+            $paragraph.Range.ParagraphFormat.KeepTogether = -1
+        }
+
         if ($text -like "Adviser:*") {
             $paragraph.Range.Font.Name = "Arial"
             $paragraph.Range.Font.Size = 10
@@ -188,20 +350,29 @@ try {
             $paragraph.Range.Style = "Caption"
             $paragraph.Range.ParagraphFormat.Alignment = $wdAlignParagraphLeft
             $paragraph.Range.ParagraphFormat.KeepWithNext = -1
+            $paragraph.Range.ParagraphFormat.KeepTogether = -1
             continue
         }
 
         if ($paragraph.Range.InlineShapes.Count -gt 0) {
             $paragraph.Range.ParagraphFormat.Alignment = $wdAlignParagraphCenter
+            $paragraph.Range.ParagraphFormat.KeepWithNext = -1
+            $paragraph.Range.ParagraphFormat.KeepTogether = -1
             continue
         }
 
-        $styleName = ""
-        try {
-            $styleName = [string]$paragraph.Range.Style.NameLocal
-        }
-        catch {
-            $styleName = ""
+        $styleName = Paragraph-StyleName $paragraph
+
+        $nextNonEmpty = Find-NextNonEmptyParagraph $doc $i
+        if ($null -ne $nextNonEmpty) {
+            $nextParagraph = $doc.Paragraphs.Item($nextNonEmpty)
+            $nextText = Paragraph-Text $nextParagraph
+            if ($nextParagraph.Range.InlineShapes.Count -gt 0 -or $nextText -like "Figure *" -or $nextText -like "Table *") {
+                $paragraph.Range.ParagraphFormat.KeepWithNext = -1
+                if ($text.Length -lt 400) {
+                    $paragraph.Range.ParagraphFormat.KeepTogether = -1
+                }
+            }
         }
 
         if ($styleName -eq "Normal" -and -not [string]::IsNullOrWhiteSpace($text)) {
@@ -232,6 +403,7 @@ try {
         $shape.LockAspectRatio = -1
         $section = $shape.Range.Sections.Item(1)
         $columns = $section.PageSetup.TextColumns.Count
+        $availableHeight = $section.PageSetup.PageHeight - $section.PageSetup.TopMargin - $section.PageSetup.BottomMargin - $word.CentimetersToPoints(3.5)
         if ($columns -eq 1) {
             $maxWidth = $section.PageSetup.PageWidth - $section.PageSetup.LeftMargin - $section.PageSetup.RightMargin - $word.CentimetersToPoints(0.5)
         }
@@ -240,6 +412,9 @@ try {
         }
         if ($shape.Width -gt $maxWidth) {
             $shape.Width = $maxWidth
+        }
+        if ($shape.Height -gt $availableHeight) {
+            $shape.Height = $availableHeight
         }
     }
 

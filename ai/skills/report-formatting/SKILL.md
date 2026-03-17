@@ -26,7 +26,7 @@ Produce a paper that:
    - full-width first section
    - two-column body
    - caption, heading, table, and figure sizing rules
-   - single-column figure and table sections when needed for readability
+   - single-column visual neighborhoods when needed for readability
 4. Export the styled DOCX to PDF from Word.
 5. Verify that figures, tables, and references remain readable.
 
@@ -47,6 +47,9 @@ Produce a paper that:
   - smaller than body text
   - left-aligned
   - directly below figures or tables
+- visual neighborhoods:
+  - widen the whole subsection around a major figure or wide table
+  - keep the heading, lead-in text, visual, and caption together when they belong to one block
 - references:
   - Vancouver style preserved
   - smaller but still readable
@@ -64,3 +67,4 @@ Produce a paper that:
 - Prefer layout adjustments over rewriting text.
 - Keep older paper versions untouched when producing a new formatting version such as `v6`.
 - Match the broad structure of the local sample article: a strong full-width first-page lead section followed by a double-column article body.
+- Avoid fragmenting figure/table subsections across different column modes when one widened block is clearer.
