@@ -1,7 +1,34 @@
 flowchart LR
-    A["Aggregate metrics<br/>Model_A vs Model_B vs Model_C"] --> E["Comparative evidence synthesis"]
-    B["Class-wise findings<br/>strong and weak classes"] --> E
-    C["Model_C confusion matrix"] --> E
-    D["Model_C training-dynamics curves"] --> E
-    E --> F["Model_C identified as the<br/>strongest tested configuration"]
-    E --> G["Interpretive limits noted:<br/>validation-only and confounded hyperparameters"]
+    classDef stage fill:#f6f1e8,stroke:#9a7b4f,stroke-width:2px,color:#2f2417;
+    classDef evidence fill:#d9ecff,stroke:#4b79a8,stroke-width:2px,color:#1b3146;
+    classDef synth fill:#fbe0d2,stroke:#b66a3c,stroke-width:2px,color:#4a2410;
+    classDef output fill:#e4f4df,stroke:#5e8f4b,stroke-width:2px,color:#21341a;
+    classDef limit fill:#f7e2f0,stroke:#9b4f86,stroke-width:2px,color:#45203b;
+
+    U1["Evidence inputs"]:::stage --> U2["Comparative synthesis"]:::stage --> U3["Study conclusion"]:::stage
+
+    subgraph E1["Evidence Stack"]
+        direction TB
+        A["📊 Aggregate metrics<br/>Model_A vs Model_B vs Model_C"]:::evidence
+        B["🧾 Class-wise findings<br/>strong and weak classes"]:::evidence
+        C["🖼 Model_C confusion matrix"]:::evidence
+        D["📈 Model_C training-dynamics curves"]:::evidence
+    end
+
+    subgraph E2["Synthesis Core"]
+        direction TB
+        E["🧠 Comparative evidence synthesis"]:::synth
+    end
+
+    subgraph E3["Interpretive Output"]
+        direction TB
+        F["✅ Model_C identified as the<br/>strongest tested configuration"]:::output
+        G["⚠ Interpretive limits:<br/>validation-only and confounded hyperparameters"]:::limit
+    end
+
+    A --> E
+    B --> E
+    C --> E
+    D --> E
+    E --> F
+    E --> G

@@ -37,6 +37,9 @@ Produce diagrams that are:
 - Prefer 4 to 8 nodes per diagram.
 - Keep arrows meaningful; every edge should communicate a study relationship.
 - Use consistent names across figures: `balanced dataset`, `validation metrics`, `class-wise findings`, `comparative interpretation`.
+- Prefer pseudo-3D composition through grouped panels, layered stages, and stacked blocks rather than literal 3D effects.
+- Use moderate iconography only; favor Unicode-safe symbols before external icon packs.
+- Keep visual styling consistent across all report diagrams by reusing the same class definitions and color family.
 
 ## Diagram Patterns
 
@@ -46,6 +49,7 @@ Produce diagrams that are:
 
 ## Export Notes
 
-- Render PNG files for Pandoc DOCX export.
+- Render both SVG and PNG files when possible.
+- Keep SVG as the editable visual master and PNG as the DOCX-ready asset.
 - Keep Mermaid source files beside or near the exported images.
 - Use filenames that are paper-safe and stable.

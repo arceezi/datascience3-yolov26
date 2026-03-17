@@ -1,9 +1,46 @@
 flowchart LR
-    A["Philippine traffic-scene images<br/>Balanced dataset"] --> B["Three YOLOv26<br/>training configurations"]
-    B --> C["Validation metrics<br/>mAP50, precision, recall, F1"]
-    B --> D["Class-wise findings<br/>per-class precision, recall, AP50, F1"]
-    B --> E["Diagnostic figures<br/>confusion matrix and training curves"]
-    C --> F["Comparative interpretation"]
+    classDef stage fill:#f6f1e8,stroke:#9a7b4f,stroke-width:2px,color:#2f2417;
+    classDef data fill:#d9ecff,stroke:#4b79a8,stroke-width:2px,color:#1b3146;
+    classDef model fill:#fbe0d2,stroke:#b66a3c,stroke-width:2px,color:#4a2410;
+    classDef evidence fill:#e4f4df,stroke:#5e8f4b,stroke-width:2px,color:#21341a;
+    classDef outcome fill:#f7e2f0,stroke:#9b4f86,stroke-width:2px,color:#45203b;
+    classDef shadow fill:#efe7db,stroke:#c7b49d,stroke-width:1px,color:#7d6b55;
+
+    S1["Stage 1"]:::stage --> S2["Stage 2"]:::stage --> S3["Stage 3"]:::stage --> S4["Stage 4"]:::stage
+
+    subgraph P1["Input Layer"]
+        direction TB
+        A0[" "]:::shadow
+        A["📷 Philippine traffic-scene images<br/>Balanced dataset"]:::data
+    end
+
+    subgraph P2["Training Layer"]
+        direction TB
+        B0[" "]:::shadow
+        B["🧠 Three YOLOv26<br/>training configurations"]:::model
+    end
+
+    subgraph P3["Evidence Layer"]
+        direction TB
+        C["📊 Validation metrics<br/>mAP50, precision, recall, F1"]:::evidence
+        D["🧾 Class-wise findings<br/>per-class precision, recall, AP50, F1"]:::evidence
+        E["🖼 Diagnostic figures<br/>confusion matrix and training curves"]:::evidence
+    end
+
+    subgraph P4["Interpretation Layer"]
+        direction TB
+        F["📝 Comparative interpretation"]:::outcome
+        G["✅ Strongest tested configuration<br/>and remaining class-level weaknesses"]:::outcome
+    end
+
+    A --> B
+    B --> C
+    B --> D
+    B --> E
+    C --> F
     D --> F
     E --> F
-    F --> G["Strongest tested configuration<br/>and remaining class-level weaknesses"]
+    F --> G
+
+    A0 --- A
+    B0 --- B
