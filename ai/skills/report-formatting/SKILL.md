@@ -1,6 +1,6 @@
 ---
 name: report-formatting
-description: Format the DataScience3 scientific paper into a Nature-inspired journal layout with reusable v6/v6.1 two-column and v7 one-column Word/PDF export profiles.
+description: Format the DataScience3 scientific paper into a Nature-inspired journal layout with reusable v6/v6.1 two-column, v7 one-column, and peer-review-statement Word/PDF export profiles.
 ---
 
 # Report Formatting
@@ -73,10 +73,29 @@ Produce a paper that:
   - captions directly below the figure or table
   - no column switching or widened sub-sections because the whole document is already one column
 
+### Peer
+
+- page:
+  - A4 portrait
+  - one column from title through closing sentence
+- structure:
+  - orange-red top rule
+  - black title
+  - one concise reflection paragraph below
+- typography:
+  - same visual family as `v7`
+  - serif body text
+  - black title
+  - dark gray secondary text
+- behavior:
+  - no fake journal metadata
+  - no proofing marks in the exported review file
+
 ## Use The Bundled Tools
 
 - Use `assets/journal-reference.docx` as the Pandoc reference DOCX for `v6` and `v6.1`.
 - Use `assets/journal-reference-v7.docx` as the reference DOCX for the one-column `v7` profile.
+- Use `assets/journal-reference-peer.docx` as the reference DOCX for the peer-review statement export profile.
 - Use `scripts/new-journal-reference-docx.ps1` only when a reference DOCX needs regeneration.
 - Use `scripts/render-markdown-docx.py` to build the unstyled DOCX from Markdown while preserving image and table references.
 - Use `scripts/format-journal-docx.ps1` to apply the journal layout and export PDF.

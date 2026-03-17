@@ -1,18 +1,3 @@
-# Formatted Peer Review Statement
-
-This file is the polished reviewable version of the required reflection paragraph.
-
-Use it when checking whether the peer review statement is already clear, defensible, and ready to export.
-
-## Peer Review Statement
+# Peer Review Statement
 
 If I had to choose one of the three tested models for a high-stakes deployment scenario, I would choose Model_C because it produced the strongest overall validation performance, including the highest mAP50, recall, and F1 score among the three configurations. In a safety-relevant traffic setting, I would favor that more balanced detection profile over a model that is precise but more likely to miss road users. Even so, I would not consider Model_C ready for direct real-world deployment yet. Before deployment, I would still require a final held-out test evaluation, stricter validation under realistic traffic conditions, and deeper class-specific error analysis, especially for weaker classes such as Tricycle. In other words, Model_C is the most defensible choice among the three current models, but it still needs further improvement and validation before operational use.
-
-Suggested focus:
-- identify which trained model you would deploy in a high-stakes setting
-- explain why that model is the most defensible choice
-- note any remaining risks or validation needs before actual deployment
-
-Final review notes:
-- keep the statement concise
-- make sure the reasoning matches the reported experiment evidence

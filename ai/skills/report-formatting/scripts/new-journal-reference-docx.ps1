@@ -3,7 +3,7 @@ param(
     [string]$OutputPath,
 
     [Parameter(Mandatory = $false)]
-    [ValidateSet("v6","v7")]
+    [ValidateSet("v6","v7","peer")]
     [string]$Profile = "v6"
 )
 
@@ -42,7 +42,7 @@ try {
     $doc.PageSetup.LeftMargin = $word.CentimetersToPoints(1.7)
     $doc.PageSetup.RightMargin = $word.CentimetersToPoints(1.7)
 
-    $isV7 = $Profile -eq "v7"
+    $isV7 = $Profile -eq "v7" -or $Profile -eq "peer"
 
     $bodyFontName = if ($isV7) { "Cambria" } else { "Arial" }
     $bodyFontSize = if ($isV7) { 10 } else { 10 }

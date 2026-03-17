@@ -9,7 +9,7 @@ param(
     [string]$OutputPdf = "",
 
     [Parameter(Mandatory = $false)]
-    [ValidateSet("v6","v7")]
+    [ValidateSet("v6","v7","peer")]
     [string]$Profile = "v6"
 )
 
@@ -215,7 +215,8 @@ try {
     $word.Visible = $false
     $word.DisplayAlerts = 0
 
-    $isV7 = $Profile -eq "v7"
+    $isPeer = $Profile -eq "peer"
+    $isV7 = $Profile -eq "v7" -or $isPeer
     $bodyFontName = if ($isV7) { "Cambria" } else { "Arial" }
     $bodyFontSize = if ($isV7) { 10 } else { 10 }
     $bodyColor = if ($isV7) { Get-OleColor 0 0 0 } else { Get-OleColor 26 34 43 }
@@ -225,6 +226,7 @@ try {
     $captionColor = if ($isV7) { Get-OleColor 80 80 80 } else { Get-OleColor 60 69 78 }
     $accentColor = Get-OleColor 230 50 33
     $titleSize = if ($isV7) { 24 } else { 20 }
+    $displayTitleSize = if ($isPeer) { 22 } else { $titleSize }
     $heading1Size = if ($isV7) { 14 } else { 13 }
     $captionFontName = if ($isV7) { "Cambria" } else { "Arial" }
     $captionFontSize = if ($isV7) { 9 } else { 8.5 }
@@ -359,7 +361,7 @@ try {
         $titleParagraph = $doc.Paragraphs.Item($titleIndex)
         $titleParagraph.Range.Style = "Title"
         $titleParagraph.Range.ParagraphFormat.Alignment = $wdAlignParagraphCenter
-        Set-ParagraphFont $titleParagraph.Range "Arial" $titleSize $titleColor
+        Set-ParagraphFont $titleParagraph.Range "Arial" $displayTitleSize $titleColor
     }
 
     for ($i = 1; $i -le $doc.Paragraphs.Count; $i++) {

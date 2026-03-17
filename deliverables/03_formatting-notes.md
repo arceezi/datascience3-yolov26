@@ -27,6 +27,10 @@ Use this article order in the current journal-style draft:
   - use a thin orange-red top rule on the first page
   - use a black title and black section headings
   - use serif body text with dark gray captions and adviser line
+- `peer-review statement`:
+  - use the same one-column visual family as `v7`
+  - keep the document simple: title plus one concise reflection paragraph
+  - do not add fake journal metadata
 - keep a major visual subsection together when it has a heading, a short lead-in paragraph, the visual itself, and a caption
 
 ## Table Style
@@ -57,6 +61,7 @@ Use this article order in the current journal-style draft:
   - `deliverables/08_formatted-article-draft-v6.md`
   - `deliverables/09_formatted-article-draft-v6.1.md`
   - `deliverables/10_formatted-article-draft-v7.md`
+  - `deliverables/11_formatted-peer-review-statement-v2.md`
 - exported files should be saved in `deliverables/exports/`
 - the journal export workflow is:
   - Markdown source

@@ -8,6 +8,7 @@ Use this reference when formatting the scientific paper into the project's versi
 - the paper supports two layout families:
   - `v6` / `v6.1`: full-width lead section and two-column body
   - `v7`: one-column Nature-inspired reading layout
+  - `peer`: one-column reflection deliverable in the same visual family as `v7`
 - emulate the broad structure of the local sample journal article without copying publisher-only metadata
 
 ## Type Hierarchy
@@ -20,6 +21,7 @@ Use this reference when formatting the scientific paper into the project's versi
 - captions: smaller than body text
 - references: slightly smaller than body text but still comfortable to read
 - `v7` should use a neutral black/gray hierarchy with serif body text and a single orange-red accent rule
+- `peer` should reuse the `v7` hierarchy, but in a shorter single-page reflection format
 
 ## Figures And Tables
 
