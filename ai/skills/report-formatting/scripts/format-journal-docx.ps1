@@ -6,7 +6,11 @@ param(
     [string]$OutputDocx,
 
     [Parameter(Mandatory = $false)]
-    [string]$OutputPdf = ""
+    [string]$OutputPdf = "",
+
+    [Parameter(Mandatory = $false)]
+    [ValidateSet("v6","v7")]
+    [string]$Profile = "v6"
 )
 
 Set-StrictMode -Version Latest
@@ -95,6 +99,12 @@ function Insert-Break-AfterParagraph($doc, [int]$index) {
 
 function Get-OleColor([int]$r, [int]$g, [int]$b) {
     return [System.Drawing.ColorTranslator]::ToOle([System.Drawing.Color]::FromArgb($r, $g, $b))
+}
+
+function Set-ParagraphFont($range, [string]$name, [double]$size, [int]$color) {
+    $range.Font.Name = $name
+    $range.Font.Size = $size
+    $range.Font.Color = $color
 }
 
 function Find-ParagraphContainingPosition($doc, [int]$position) {
@@ -205,6 +215,23 @@ try {
     $word.Visible = $false
     $word.DisplayAlerts = 0
 
+    $isV7 = $Profile -eq "v7"
+    $bodyFontName = if ($isV7) { "Cambria" } else { "Arial" }
+    $bodyFontSize = if ($isV7) { 10 } else { 10 }
+    $bodyColor = if ($isV7) { Get-OleColor 0 0 0 } else { Get-OleColor 26 34 43 }
+    $headingColor = if ($isV7) { Get-OleColor 0 0 0 } else { Get-OleColor 26 92 122 }
+    $titleColor = if ($isV7) { Get-OleColor 0 0 0 } else { Get-OleColor 26 56 99 }
+    $metaColor = if ($isV7) { Get-OleColor 80 80 80 } else { Get-OleColor 70 78 90 }
+    $captionColor = if ($isV7) { Get-OleColor 80 80 80 } else { Get-OleColor 60 69 78 }
+    $accentColor = Get-OleColor 230 50 33
+    $titleSize = if ($isV7) { 24 } else { 20 }
+    $heading1Size = if ($isV7) { 14 } else { 13 }
+    $captionFontName = if ($isV7) { "Cambria" } else { "Arial" }
+    $captionFontSize = if ($isV7) { 9 } else { 8.5 }
+    $heading3FontName = if ($isV7) { "Cambria" } else { "Arial" }
+    $tableFontName = if ($isV7) { "Cambria" } else { "Arial" }
+    $tableFontSize = if ($isV7) { 9 } else { 8 }
+
     $inputPath = (Resolve-Path $InputDocx).Path
     $doc = $word.Documents.Open($inputPath)
     $doc.PageSetup.PaperSize = $wdPaperA4
@@ -222,101 +249,108 @@ try {
         $section.PageSetup.RightMargin = $word.CentimetersToPoints(1.7)
     }
 
-    $introIndex = Find-ParagraphIndex $doc "Introduction"
-    if ($null -ne $introIndex) {
-        Insert-Break-BeforeParagraph $doc $introIndex
-    }
-
-    $blocks = New-Object System.Collections.ArrayList
-
-    $conceptHeading = Find-ExactParagraphOrNull $doc "Conceptual Framework"
-    if ($null -ne $conceptHeading) {
-        $captionIndex = Find-CaptionAfterIndex $doc $conceptHeading "Figure 1."
-        if ($null -ne $captionIndex) {
-            Add-Block $blocks $conceptHeading (Find-PostCaptionTail $doc $captionIndex)
+    if (-not $isV7) {
+        $introIndex = Find-ParagraphIndex $doc "Introduction"
+        if ($null -ne $introIndex) {
+            Insert-Break-BeforeParagraph $doc $introIndex
         }
-    }
 
-    $datasetCaption = Find-ParagraphStartingWith $doc "Figure 3."
-    if ($null -ne $datasetCaption) {
-        $imageIndex = Find-VisualParagraphBeforeCaption $doc $datasetCaption
-        if ($null -ne $imageIndex) {
-            Add-Block $blocks $imageIndex $datasetCaption
-        }
-    }
+        $blocks = New-Object System.Collections.ArrayList
 
-    $workflowHeading = Find-ExactParagraphOrNull $doc "Study Workflow"
-    if ($null -ne $workflowHeading) {
-        $captionIndex = Find-CaptionAfterIndex $doc $workflowHeading "Figure 2."
-        if ($null -ne $captionIndex) {
-            Add-Block $blocks $workflowHeading (Find-PostCaptionTail $doc $captionIndex)
-        }
-    }
-
-    foreach ($table in @($doc.Tables)) {
-        $tableStart = Find-ParagraphContainingPosition $doc $table.Range.Start
-        $tableEnd = Find-ParagraphContainingPosition $doc ($table.Range.End - 1)
-        if ($null -eq $tableStart -or $null -eq $tableEnd) {
-            continue
-        }
-        $captionIndex = Find-PreviousNonEmptyParagraph $doc $tableStart
-        if ($null -ne $captionIndex -and (Paragraph-Text $doc.Paragraphs.Item($captionIndex)) -like "Table *") {
-            $resultsHeading = Find-ExactParagraphOrNull $doc "Results"
-            $resultsIntro = $null
-            if ($null -ne $resultsHeading) {
-                $resultsIntro = Find-NextNonEmptyParagraph $doc $resultsHeading
+        $conceptHeading = Find-ExactParagraphOrNull $doc "Conceptual Framework"
+        if ($null -ne $conceptHeading) {
+            $captionIndex = Find-CaptionAfterIndex $doc $conceptHeading "Figure 1."
+            if ($null -ne $captionIndex) {
+                Add-Block $blocks $conceptHeading (Find-PostCaptionTail $doc $captionIndex)
             }
-            $tableNote = Find-NextNonEmptyParagraph $doc $tableEnd
-            if ($null -ne $resultsIntro -and $resultsIntro -lt $captionIndex -and $null -ne $tableNote) {
-                Add-Block $blocks $resultsIntro $tableNote
+        }
+
+        $datasetCaption = Find-ParagraphStartingWith $doc "Figure 3."
+        if ($null -ne $datasetCaption) {
+            $imageIndex = Find-VisualParagraphBeforeCaption $doc $datasetCaption
+            if ($null -ne $imageIndex) {
+                Add-Block $blocks $imageIndex $datasetCaption
+            }
+        }
+
+        $workflowHeading = Find-ExactParagraphOrNull $doc "Study Workflow"
+        if ($null -ne $workflowHeading) {
+            $captionIndex = Find-CaptionAfterIndex $doc $workflowHeading "Figure 2."
+            if ($null -ne $captionIndex) {
+                Add-Block $blocks $workflowHeading (Find-PostCaptionTail $doc $captionIndex)
+            }
+        }
+
+        foreach ($table in @($doc.Tables)) {
+            $tableStart = Find-ParagraphContainingPosition $doc $table.Range.Start
+            $tableEnd = Find-ParagraphContainingPosition $doc ($table.Range.End - 1)
+            if ($null -eq $tableStart -or $null -eq $tableEnd) {
+                continue
+            }
+            $captionIndex = Find-PreviousNonEmptyParagraph $doc $tableStart
+            if ($null -ne $captionIndex -and (Paragraph-Text $doc.Paragraphs.Item($captionIndex)) -like "Table *") {
+                $resultsHeading = Find-ExactParagraphOrNull $doc "Results"
+                $resultsIntro = $null
+                if ($null -ne $resultsHeading) {
+                    $resultsIntro = Find-NextNonEmptyParagraph $doc $resultsHeading
+                }
+                $tableNote = Find-NextNonEmptyParagraph $doc $tableEnd
+                if ($null -ne $resultsIntro -and $resultsIntro -lt $captionIndex -and $null -ne $tableNote) {
+                    Add-Block $blocks $resultsIntro $tableNote
+                }
+                else {
+                    Add-Block $blocks $captionIndex $tableEnd
+                }
+            }
+        }
+
+        $confusionHeading = Find-ExactParagraphOrNull $doc "Confusion Matrix"
+        if ($null -ne $confusionHeading) {
+            $captionIndex = Find-CaptionAfterIndex $doc $confusionHeading "Figure 4."
+            if ($null -ne $captionIndex) {
+                Add-Block $blocks $confusionHeading (Find-PostCaptionTail $doc $captionIndex)
+            }
+        }
+
+        $trainingHeading = Find-ExactParagraphOrNull $doc "Training Dynamics"
+        if ($null -ne $trainingHeading) {
+            $captionIndex = Find-CaptionAfterIndex $doc $trainingHeading "Figure 5."
+            if ($null -ne $captionIndex) {
+                Add-Block $blocks $trainingHeading (Find-PostCaptionTail $doc $captionIndex)
+            }
+        }
+
+        $synthesisHeading = Find-ExactParagraphOrNull $doc "Results-Synthesis Diagram"
+        if ($null -ne $synthesisHeading) {
+            $captionIndex = Find-CaptionAfterIndex $doc $synthesisHeading "Figure 6."
+            if ($null -ne $captionIndex) {
+                Add-Block $blocks $synthesisHeading (Find-PostCaptionTail $doc $captionIndex)
+            }
+        }
+
+        $blocks = $blocks | Sort-Object Start -Descending
+        foreach ($block in $blocks) {
+            Insert-Break-AfterParagraph $doc $block.End
+            Insert-Break-BeforeParagraph $doc $block.Start
+        }
+
+        for ($i = 1; $i -le $doc.Sections.Count; $i++) {
+            $section = $doc.Sections.Item($i)
+            $text = Clean-Text $section.Range.Text
+            $hasInlineShapes = $section.Range.InlineShapes.Count -gt 0
+            $hasTables = $section.Range.Tables.Count -gt 0
+            if ($i -eq 1 -or $hasInlineShapes -or $hasTables -or $text -match "^(Figure|Table)\s") {
+                $section.PageSetup.TextColumns.SetCount(1)
             }
             else {
-                Add-Block $blocks $captionIndex $tableEnd
+                $section.PageSetup.TextColumns.SetCount(2)
+                $section.PageSetup.TextColumns.Spacing = $word.CentimetersToPoints(0.75)
             }
         }
     }
-
-    $confusionHeading = Find-ExactParagraphOrNull $doc "Confusion Matrix"
-    if ($null -ne $confusionHeading) {
-        $captionIndex = Find-CaptionAfterIndex $doc $confusionHeading "Figure 4."
-        if ($null -ne $captionIndex) {
-            Add-Block $blocks $confusionHeading (Find-PostCaptionTail $doc $captionIndex)
-        }
-    }
-
-    $trainingHeading = Find-ExactParagraphOrNull $doc "Training Dynamics"
-    if ($null -ne $trainingHeading) {
-        $captionIndex = Find-CaptionAfterIndex $doc $trainingHeading "Figure 5."
-        if ($null -ne $captionIndex) {
-            Add-Block $blocks $trainingHeading (Find-PostCaptionTail $doc $captionIndex)
-        }
-    }
-
-    $synthesisHeading = Find-ExactParagraphOrNull $doc "Results-Synthesis Diagram"
-    if ($null -ne $synthesisHeading) {
-        $captionIndex = Find-CaptionAfterIndex $doc $synthesisHeading "Figure 6."
-        if ($null -ne $captionIndex) {
-            Add-Block $blocks $synthesisHeading (Find-PostCaptionTail $doc $captionIndex)
-        }
-    }
-
-    $blocks = $blocks | Sort-Object Start -Descending
-    foreach ($block in $blocks) {
-        Insert-Break-AfterParagraph $doc $block.End
-        Insert-Break-BeforeParagraph $doc $block.Start
-    }
-
-    for ($i = 1; $i -le $doc.Sections.Count; $i++) {
-        $section = $doc.Sections.Item($i)
-        $text = Clean-Text $section.Range.Text
-        $hasInlineShapes = $section.Range.InlineShapes.Count -gt 0
-        $hasTables = $section.Range.Tables.Count -gt 0
-        if ($i -eq 1 -or $hasInlineShapes -or $hasTables -or $text -match "^(Figure|Table)\s") {
+    else {
+        foreach ($section in @($doc.Sections)) {
             $section.PageSetup.TextColumns.SetCount(1)
-        }
-        else {
-            $section.PageSetup.TextColumns.SetCount(2)
-            $section.PageSetup.TextColumns.Spacing = $word.CentimetersToPoints(0.75)
         }
     }
 
@@ -325,6 +359,7 @@ try {
         $titleParagraph = $doc.Paragraphs.Item($titleIndex)
         $titleParagraph.Range.Style = "Title"
         $titleParagraph.Range.ParagraphFormat.Alignment = $wdAlignParagraphCenter
+        Set-ParagraphFont $titleParagraph.Range "Arial" $titleSize $titleColor
     }
 
     for ($i = 1; $i -le $doc.Paragraphs.Count; $i++) {
@@ -337,12 +372,12 @@ try {
         }
 
         if ($text -like "Adviser:*") {
-            $paragraph.Range.Font.Name = "Arial"
-            $paragraph.Range.Font.Size = 10
+            $paragraph.Range.Font.Name = if ($isV7) { "Arial" } else { "Arial" }
+            $paragraph.Range.Font.Size = if ($isV7) { 9 } else { 10 }
             $paragraph.Range.Font.Italic = $false
-            $paragraph.Range.Font.Color = Get-OleColor 70 78 90
+            $paragraph.Range.Font.Color = $metaColor
             $paragraph.Range.ParagraphFormat.Alignment = $wdAlignParagraphCenter
-            $paragraph.Range.ParagraphFormat.SpaceAfter = 8
+            $paragraph.Range.ParagraphFormat.SpaceAfter = if ($isV7) { 10 } else { 8 }
             continue
         }
 
@@ -351,6 +386,8 @@ try {
             $paragraph.Range.ParagraphFormat.Alignment = $wdAlignParagraphLeft
             $paragraph.Range.ParagraphFormat.KeepWithNext = -1
             $paragraph.Range.ParagraphFormat.KeepTogether = -1
+            Set-ParagraphFont $paragraph.Range $captionFontName $captionFontSize $captionColor
+            $paragraph.Range.Font.Italic = -1
             continue
         }
 
@@ -378,6 +415,17 @@ try {
         if ($styleName -eq "Normal" -and -not [string]::IsNullOrWhiteSpace($text)) {
             $paragraph.Range.ParagraphFormat.Alignment = $wdAlignParagraphJustify
             $paragraph.Range.ParagraphFormat.LineSpacingRule = $wdLineSpaceSingle
+            Set-ParagraphFont $paragraph.Range $bodyFontName $bodyFontSize $bodyColor
+        }
+
+        if ($styleName -eq "Heading 1") {
+            Set-ParagraphFont $paragraph.Range "Arial" $heading1Size $headingColor
+        }
+        elseif ($styleName -eq "Heading 2") {
+            Set-ParagraphFont $paragraph.Range "Arial" 11 $headingColor
+        }
+        elseif ($styleName -eq "Heading 3") {
+            Set-ParagraphFont $paragraph.Range $heading3FontName 10 $headingColor
         }
     }
 
@@ -395,8 +443,9 @@ try {
 
     foreach ($table in @($doc.Tables)) {
         $table.AutoFitBehavior($wdAutoFitWindow)
-        $table.Range.Font.Name = "Arial"
-        $table.Range.Font.Size = 8
+        $table.Range.Font.Name = $tableFontName
+        $table.Range.Font.Size = $tableFontSize
+        $table.Range.Font.Color = $bodyColor
     }
 
     foreach ($shape in @($doc.InlineShapes)) {
@@ -416,6 +465,24 @@ try {
         if ($shape.Height -gt $availableHeight) {
             $shape.Height = $availableHeight
         }
+    }
+
+    if ($isV7) {
+        $shape = $doc.Shapes.AddShape(
+            1,
+            $doc.PageSetup.LeftMargin,
+            $word.CentimetersToPoints(0.75),
+            $doc.PageSetup.PageWidth - $doc.PageSetup.LeftMargin - $doc.PageSetup.RightMargin,
+            $word.CentimetersToPoints(0.08)
+        )
+        $shape.Fill.ForeColor.RGB = $accentColor
+        $shape.Fill.Visible = -1
+        $shape.Line.Visible = 0
+        $shape.WrapFormat.Type = 3
+        $shape.RelativeHorizontalPosition = 0
+        $shape.RelativeVerticalPosition = 0
+        $shape.LockAnchor = -1
+        $shape.ZOrder(5) | Out-Null
     }
 
     $outputDir = Split-Path -Parent $OutputDocx

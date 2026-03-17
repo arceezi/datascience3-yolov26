@@ -1,17 +1,14 @@
 # Journal Layout Spec
 
-Use this reference when formatting the scientific paper into the project's `v6` style.
+Use this reference when formatting the scientific paper into the project's versioned journal styles.
 
 ## Core Layout
 
 - page size: `A4`, portrait
-- title, adviser line, and abstract: full width
-- body from `Introduction` onward: two columns
-- moderate gutter between columns
-- emulate the broad structure of the local sample journal article:
-  - full-width first-page lead section
-  - readable two-column article body
-  - figure and table neighborhoods widened to preserve readability
+- the paper supports two layout families:
+  - `v6` / `v6.1`: full-width lead section and two-column body
+  - `v7`: one-column Nature-inspired reading layout
+- emulate the broad structure of the local sample journal article without copying publisher-only metadata
 
 ## Type Hierarchy
 
@@ -22,6 +19,7 @@ Use this reference when formatting the scientific paper into the project's `v6` 
 - body text: readable, not compressed
 - captions: smaller than body text
 - references: slightly smaller than body text but still comfortable to read
+- `v7` should use a neutral black/gray hierarchy with serif body text and a single orange-red accent rule
 
 ## Figures And Tables
 

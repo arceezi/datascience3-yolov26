@@ -17,10 +17,16 @@ Use this article order in the current journal-style draft:
 ## Layout Model
 
 - use an A4 portrait page
-- keep the title, adviser line, and abstract in a full-width lead section
-- begin the double-column body at `Introduction`
-- use a moderate column gutter so the text stays readable
-- widen figure and table neighborhoods when needed rather than shrinking them too aggressively
+- `v6` / `v6.1`:
+  - keep the title, adviser line, and abstract in a full-width lead section
+  - begin the double-column body at `Introduction`
+  - use a moderate column gutter so the text stays readable
+  - widen figure and table neighborhoods when needed rather than shrinking them too aggressively
+- `v7`:
+  - keep the entire article in one column
+  - use a thin orange-red top rule on the first page
+  - use a black title and black section headings
+  - use serif body text with dark gray captions and adviser line
 - keep a major visual subsection together when it has a heading, a short lead-in paragraph, the visual itself, and a caption
 
 ## Table Style
@@ -47,9 +53,12 @@ Use this article order in the current journal-style draft:
 
 ## Export Expectations
 
-- the current journal-style source for `v6` is `deliverables/08_formatted-article-draft-v6.md`
+- the current journal-style sources are:
+  - `deliverables/08_formatted-article-draft-v6.md`
+  - `deliverables/09_formatted-article-draft-v6.1.md`
+  - `deliverables/10_formatted-article-draft-v7.md`
 - exported files should be saved in `deliverables/exports/`
-- the `v6` export workflow is:
+- the journal export workflow is:
   - Markdown source
   - base DOCX via Pandoc reference DOCX
   - styled DOCX via Word automation
